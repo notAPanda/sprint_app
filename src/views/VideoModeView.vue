@@ -9,7 +9,7 @@ import { drawSkeleton, countVisibleLandmarks } from "../lib/pose-drawing";
 
 import { POSE_LANDMARKS } from "../lib/pose-connections";
 import { Button } from "@/components/ui/button";
-import { CircleCheck, Volume2, VolumeOff } from "@lucide/vue";
+import { CircleCheck, SwitchCamera, Volume2, VolumeOff } from "@lucide/vue";
 
 interface AngleResult {
   leftKneeAngle: number | null;
@@ -279,15 +279,19 @@ const stopPleasantTone = (): void => {
 <template>
   <div class="relative min-h-screen w-full bg-black">
     <div class="absolute inset-x-0 bottom-0 z-10">
-      <div class="flex justify-center my-6">
-        <Badge v-if="isOptimalPose()" class="text-green-600 mx-4">
-          <CircleCheck />
-        </Badge>
-        <Button class="mx-4" @click="soundEnabled = !soundEnabled">
-          <Volume2 v-if="soundEnabled" />
-          <VolumeOff v-else />
-        </Button>
-        <Button class="mx-4" @click="switchCamera">Switch camera</Button>
+      <div class="flex justify-around my-10">
+        <div>
+          <Badge v-if="isOptimalPose()" class="text-green-600 mx-4 text-2xl">
+            <CircleCheck />
+          </Badge>
+        </div>
+        <div class="flex justify-center my-10">
+          <Button size="icon-lg" class="mx-4" @click="soundEnabled = !soundEnabled">
+            <Volume2 v-if="soundEnabled" />
+            <VolumeOff v-else />
+          </Button>
+          <Button size="icon-lg" class="mx-4" @click="switchCamera"><SwitchCamera /></Button>
+        </div>
       </div>
     </div>
 
