@@ -9,7 +9,7 @@ import { drawSkeleton, countVisibleLandmarks } from "../lib/pose-drawing";
 
 import { POSE_LANDMARKS } from "../lib/pose-connections";
 import { Button } from "@/components/ui/button";
-import { CircleCheck } from "@lucide/vue";
+import { CircleCheck, Volume2, VolumeOff } from "@lucide/vue";
 
 interface AngleResult {
   leftKneeAngle: number | null;
@@ -159,8 +159,12 @@ const startPoseDetection = async (): Promise<void> => {
 
     angles.value = calculateAngles(landmarks, canvas, ctx);
 
-    const visibleCount = countVisibleLandmarks(landmarks, 0.5);
-    console.log("visible landmarks", visibleCount);
+    const optimal = isOptimalPose();
+    if (soundEnabled.value && optimal) {
+      await startPleasantTone();
+    } else {
+      stopPleasantTone();
+    }
   }
 
   requestAnimationFrame(startPoseDetection);
@@ -223,7 +227,53 @@ onMounted(async () => {
 // Clean up the camera stream when the component is destroyed
 onBeforeUnmount(() => {
   stopCamera();
+  stopPleasantTone();
 });
+
+const soundEnabled = ref(false);
+
+let audioContext: AudioContext | null = null;
+let oscillator: OscillatorNode | null = null;
+let gainNode: GainNode | null = null;
+let isSoundPlaying = false;
+
+const ensureAudioContext = async (): Promise<void> => {
+  if (!audioContext) audioContext = new AudioContext();
+  if (audioContext.state === "suspended") await audioContext.resume();
+};
+
+const startPleasantTone = async (): Promise<void> => {
+  if (!soundEnabled.value || isSoundPlaying) return;
+  await ensureAudioContext();
+
+  if (!audioContext) return;
+
+  gainNode = audioContext.createGain();
+  gainNode.gain.value = 0.03;
+
+  oscillator = audioContext.createOscillator();
+  oscillator.type = "sine";
+  oscillator.frequency.value = 440;
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.start();
+  isSoundPlaying = true;
+};
+
+const stopPleasantTone = (): void => {
+  if (oscillator) {
+    oscillator.stop();
+    oscillator.disconnect();
+    oscillator = null;
+  }
+  if (gainNode) {
+    gainNode.disconnect();
+    gainNode = null;
+  }
+  isSoundPlaying = false;
+};
 </script>
 
 <template>
@@ -233,6 +283,10 @@ onBeforeUnmount(() => {
         <Badge v-if="isOptimalPose()" class="text-green-600 mx-4">
           <CircleCheck />
         </Badge>
+        <Button class="mx-4" @click="soundEnabled = !soundEnabled">
+          <Volume2 v-if="soundEnabled" />
+          <VolumeOff v-else />
+        </Button>
         <Button class="mx-4" @click="switchCamera">Switch camera</Button>
       </div>
     </div>
