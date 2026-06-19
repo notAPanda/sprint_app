@@ -122,16 +122,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.landscape-rotate {
-  transform: rotate(90deg);
-  transform-origin: center center;
-  width: 100vh;
-  height: 100vw;
-}
-
-.landscape-rotate video,
-.landscape-rotate canvas {
-  transform: rotate(90deg);
-  transform-origin: center center;
-}

@@ -108,13 +108,6 @@ const angles = ref<AngleResult>({
   rightKneeAngle: null,
 });
 const cameraFacingMode = ref<"user" | "environment">("environment");
-const isLandscape = ref(window.innerWidth > window.innerHeight);
-
-const updateOrientation = () => {
-  isLandscape.value = window.innerWidth > window.innerHeight;
-};
-
-window.addEventListener("resize", updateOrientation);
 
 let stream: MediaStream | null = null;
 
@@ -229,18 +222,11 @@ onMounted(async () => {
 // Clean up the camera stream when the component is destroyed
 onBeforeUnmount(() => {
   stopCamera();
-  window.removeEventListener("resize", updateOrientation);
 });
 </script>
 
 <template>
-  <div
-    class="min-h-screen w-full bg-black"
-    :class="[
-      'relative overflow-hidden',
-      isLandscape ? 'landscape-rotate' : 'portrait-normal',
-    ]"
-  >
+  <div class="relative min-h-screen w-full bg-black">
     <div class="absolute inset-x-0 bottom-0 z-10">
       <div class="flex justify-center my-6">
         <Badge v-if="isOptimalPose()" class="text-green-600 mx-4">
