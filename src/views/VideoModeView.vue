@@ -106,7 +106,7 @@ const angles = ref<AngleResult>({
   leftKneeAngle: null,
   rightKneeAngle: null,
 });
-const cameraFacingMode = ref<"user" | "environment">("environment")
+const cameraFacingMode = ref<"user" | "environment">("environment");
 
 let stream: MediaStream | null = null;
 
@@ -182,7 +182,11 @@ const startCamera = async (): Promise<void> => {
   try {
     // Request permission and access video stream
     stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: 1280, height: 720 },
+      video: { 
+        width: 1280, 
+        height: 720, 
+        facingMode: cameraFacingMode.value,
+      },
       audio: false,
     });
 
