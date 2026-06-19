@@ -101,7 +101,7 @@ function calculateAngles(
 
 const videoElement = ref<HTMLVideoElement | null>(null);
 const canvasElement = ref<HTMLCanvasElement | null>(null);
-const angles = ref({
+const angles = ref<AngleResult>({
   leftKneeAngle: null,
   rightKneeAngle: null,
 });
