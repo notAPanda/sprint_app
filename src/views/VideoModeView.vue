@@ -8,7 +8,8 @@ import { getPoseDetector } from "../lib/pose-detector";
 import { drawSkeleton, countVisibleLandmarks } from "../lib/pose-drawing";
 
 import { POSE_LANDMARKS } from "../lib/pose-connections";
-import Button from "@/components/ui/button/Button.vue";
+import { Button } from "@/components/ui/button";
+import { CircleCheck } from "@lucide/vue";
 
 interface AngleResult {
   leftKneeAngle: number | null;
@@ -107,6 +108,13 @@ const angles = ref<AngleResult>({
   rightKneeAngle: null,
 });
 const cameraFacingMode = ref<"user" | "environment">("environment");
+const isLandscape = ref(window.innerWidth > window.innerHeight);
+
+const updateOrientation = () => {
+  isLandscape.value = window.innerWidth > window.innerHeight;
+};
+
+window.addEventListener("resize", updateOrientation);
 
 let stream: MediaStream | null = null;
 
@@ -182,9 +190,9 @@ const startCamera = async (): Promise<void> => {
   try {
     // Request permission and access video stream
     stream = await navigator.mediaDevices.getUserMedia({
-      video: { 
-        width: 1280, 
-        height: 720, 
+      video: {
+        width: 1280,
+        height: 720,
         facingMode: cameraFacingMode.value,
       },
       audio: false,
@@ -221,21 +229,24 @@ onMounted(async () => {
 // Clean up the camera stream when the component is destroyed
 onBeforeUnmount(() => {
   stopCamera();
+  window.removeEventListener("resize", updateOrientation);
 });
 </script>
 
 <template>
-  <div class="relative min-h-screen w-full bg-black">
+  <div
+    class="min-h-screen w-full bg-black"
+    :class="[
+      'relative overflow-hidden',
+      isLandscape ? 'landscape-rotate' : 'portrait-normal',
+    ]"
+  >
     <div class="absolute inset-x-0 bottom-0 z-10">
       <div class="flex justify-center my-6">
-        <Badge v-if="isOptimalPose()">Optimal!</Badge>
-        <Badge v-if="angles.rightKneeAngle !== null"
-          >Right knee: {{ angles.rightKneeAngle }}</Badge
-        >
-        <Badge v-if="angles.leftKneeAngle !== null"
-          >Left knee: {{ angles.leftKneeAngle }}</Badge
-        >
-        <Button @click="switchCamera">Switch camera</Button>
+        <Badge v-if="isOptimalPose()" class="text-green-600 mx-4">
+          <CircleCheck />
+        </Badge>
+        <Button class="mx-4" @click="switchCamera">Switch camera</Button>
       </div>
     </div>
 
