@@ -10,7 +10,8 @@ export interface DrawSkeletonOptions {
   /** Height of the canvas (drawing buffer) in pixels. */
   height: number
   /** Minimum landmark visibility (0..1) to draw a bone / joint. */
-  minVisibility?: number
+  minVisibility?: number,
+  useOptimalColors?: boolean
 }
 
 // Part -> stroke color. Lime/emerald skeleton on dark video for an athletic look.
@@ -29,6 +30,10 @@ const PART_COLORS: Record<string, string> = {
 
 const JOINT_COLOR = "#ffffff"
 const KEY_JOINT_COLOR = "#a3e635"
+
+const inactiveColor = "rgba(255,255,255,0.25)"
+const activeJointColor = "#a3e635"
+const activeBoneColor = { ...PART_COLORS }
 
 // NOTE: coordinates are drawn in raw camera space. Any mirroring is handled
 // at the CSS layer (transform on a wrapper that contains BOTH the video and
@@ -59,7 +64,9 @@ export function drawSkeleton(
   ctx.lineJoin = "round"
 
   for (const [part, connections] of Object.entries(POSE_CONNECTIONS)) {
-    const color = PART_COLORS[part] ?? "#a3e635"
+    const color = opts.useOptimalColors
+      ? PART_COLORS[part] ?? "#a3e635"
+      : inactiveColor
     ctx.strokeStyle = color
     ctx.lineWidth = part === "torso" ? 6 : 4
 
@@ -89,7 +96,7 @@ export function drawSkeleton(
   }
 
   // ---- Key joints (larger, highlighted) ----
-  ctx.fillStyle = KEY_JOINT_COLOR
+  ctx.fillStyle = opts.useOptimalColors ? KEY_JOINT_COLOR : inactiveColor
   ctx.strokeStyle = "#052e16"
   ctx.lineWidth = 2
   for (const idx of KEY_JOINTS) {

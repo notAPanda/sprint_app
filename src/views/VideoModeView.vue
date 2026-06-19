@@ -154,6 +154,7 @@ const startPoseDetection = async (): Promise<void> => {
       width: canvas.width,
       height: canvas.height,
       minVisibility: 0.5,
+      useOptimalColors: isOptimalPose(),
     });
 
     angles.value = calculateAngles(landmarks, canvas, ctx);
