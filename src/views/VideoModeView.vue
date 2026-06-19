@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
         <Badge v-if="angles.leftKneeAngle !== null"
           >Left knee: {{ angles.leftKneeAngle }}</Badge
         >
-        <Button @click="switchCamera"></Button>
+        <Button @click="switchCamera">Switch camera</Button>
       </div>
     </div>
 
