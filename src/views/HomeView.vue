@@ -30,12 +30,13 @@ import { Button } from '@/components/ui/button';
             who will start from the block.
           </li>
           <li>
-            <strong class="text-slate-900">4. Aim for a clean 90° angle.</strong>
+            <strong class="text-slate-900">4. Position yourself perpendicular to the direction of running.</strong>
             Set the camera level with the person’s starting position.
           </li>
           <li>
             <strong class="text-slate-900">5. Watch the guidance lines.</strong>
-            If the person has optimal position, the lines will turn green.
+            If the person has optimal position, the lines will turn green
+            (app looks for 103° and 140° in the knees)
           </li>
         </ol>
 
