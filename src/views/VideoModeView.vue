@@ -124,8 +124,8 @@ const isOptimalPose = (): boolean => {
   if (rightKneeAngle === null || leftKneeAngle === null) return false;
 
   const tolerance = 10; // degrees - adjust as needed
-  const isNear90 = (angle: number) => Math.abs(angle - 90) <= tolerance;
-  const isNear120 = (angle: number) => Math.abs(angle - 120) <= tolerance;
+  const isNear90 = (angle: number) => Math.abs(angle - 103) <= tolerance;
+  const isNear120 = (angle: number) => Math.abs(angle - 140) <= tolerance;
 
   return (
     (isNear90(rightKneeAngle) && isNear120(leftKneeAngle)) ||
