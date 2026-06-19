@@ -8,6 +8,7 @@ import { getPoseDetector } from "../lib/pose-detector";
 import { drawSkeleton, countVisibleLandmarks } from "../lib/pose-drawing";
 
 import { POSE_LANDMARKS } from "../lib/pose-connections";
+import Button from "@/components/ui/button/Button.vue";
 
 interface AngleResult {
   leftKneeAngle: number | null;
@@ -105,10 +106,18 @@ const angles = ref<AngleResult>({
   leftKneeAngle: null,
   rightKneeAngle: null,
 });
+const cameraFacingMode = ref<"user" | "environment">("environment")
 
 let stream: MediaStream | null = null;
 
 const detector = getPoseDetector();
+
+const switchCamera = async (): Promise<void> => {
+  stopCamera();
+  cameraFacingMode.value =
+    cameraFacingMode.value === "user" ? "environment" : "user";
+  await startCamera();
+};
 
 const isOptimalPose = (): boolean => {
   const { rightKneeAngle, leftKneeAngle } = angles.value;
@@ -222,6 +231,7 @@ onBeforeUnmount(() => {
         <Badge v-if="angles.leftKneeAngle !== null"
           >Left knee: {{ angles.leftKneeAngle }}</Badge
         >
+        <Button @click="switchCamera"></Button>
       </div>
     </div>
 
