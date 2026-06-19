@@ -65,8 +65,8 @@ function calculateAngles(
     const B = lmToPoint(leftKnee, canvas.width, canvas.height);
     const C = lmToPoint(leftAnkle, canvas.width, canvas.height);
     const leftKneeAngle = angleDegBetweenThree(A, B, C);
-    ctx.fillStyle = "white";
-    ctx.fillText(`${Math.round(leftKneeAngle)}°`, B.x + 6, B.y - 6);
+    // ctx.fillStyle = "white";
+    // ctx.fillText(`${Math.round(leftKneeAngle)}°`, B.x + 6, B.y - 6);
   }
 
   if (rightHip && rightKnee && rightAnkle) {
@@ -74,8 +74,8 @@ function calculateAngles(
     const B = lmToPoint(rightKnee, canvas.width, canvas.height);
     const C = lmToPoint(rightAnkle, canvas.width, canvas.height);
     const rightKneeAngle = angleDegBetweenThree(A, B, C);
-    ctx.fillStyle = "white";
-    ctx.fillText(`${Math.round(rightKneeAngle)}°`, B.x + 6, B.y - 6);
+    // ctx.fillStyle = "white";
+    // ctx.fillText(`${Math.round(rightKneeAngle)}°`, B.x + 6, B.y - 6);
   }
   return {
     leftKneeAngle:
